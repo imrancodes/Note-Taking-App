@@ -1,5 +1,5 @@
 const Button = ({
-    classname = '',
+    className = '',
     children,
     type = 'button',
     onClick,
@@ -10,7 +10,7 @@ const Button = ({
             onClick={onClick}
             type={type}
             {...props}
-            className={`text-center w-full cursor-pointer rounded ${classname}`}>
+            className={`text-center cursor-pointer rounded ${className}`}>
             {children}
         </button>
     );

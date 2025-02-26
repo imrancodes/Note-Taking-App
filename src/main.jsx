@@ -12,6 +12,7 @@ import Login from './components/Authentication/Login/Login.jsx';
 import SignUp from './components/Authentication/SignUp/SignUp.jsx';
 import AuthLayout from './components/Authentication/AuthLayout.jsx';
 import MainLayout from './components/MainLayout/MainLayout.jsx';
+import LogoutPage from './components/LogoutPage/LogoutPage.jsx';
 
 
 const router = createBrowserRouter(
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
         <>
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<App />} />
+                <Route path='/logout' element={<LogoutPage />} />
             </Route>
 
             <Route element={<AuthLayout />}>

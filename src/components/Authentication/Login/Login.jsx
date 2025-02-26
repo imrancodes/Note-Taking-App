@@ -9,29 +9,35 @@ import { toast, ToastContainer } from 'react-toastify';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { app } from '../../../firebase';
 import { useState } from 'react';
+import logo from '../../../assets/logo.png';
+import { useNavigate } from 'react-router-dom';
 
 const auth = getAuth(app)
+
 
 const Login = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const navigate = useNavigate()
+
     const signInUser = async (e) => {
         e.preventDefault()
-        try{
+        try {
             await signInWithEmailAndPassword(auth, email, password)
 
             toast.success(
                 'Login successfully!',
                 { autoClose: 3000 },
-                { style: { backgroundColor: '#3E37F7', color: 'white' } }
             );
+
+            navigate('/')
 
             setEmail('')
             setPassword('')
-            
-        }catch(err){
+
+        } catch (err) {
             switch (err.code) {
                 case "auth/invalid-email":
                     toast.error("Invalid email format. Please check and try again.");
@@ -56,7 +62,7 @@ const Login = () => {
                     console.log(err.code);
             }
         }
-    } 
+    }
 
     return (
         <>
@@ -65,7 +71,10 @@ const Login = () => {
                 autoClose={3000}
                 theme="colored"
             />
-            <CenterCard>
+            <CenterCard className='max-[600px]:w-[80%]'>
+                <div className='flex justify-center'>
+                    <img src={logo} alt="" className='size-24 ' />
+                </div>
                 <h1 className="text-[#3E37F7] text-3xl ">SignIn</h1>
                 <p className="text-[12px] dark:text-white">
                     Hey enter your details to login to your account!
@@ -88,7 +97,7 @@ const Login = () => {
                             value={password}
                             onValueChange={value => setPassword(value)}
                         />
-                        <Button onClick={signInUser} type='submit' classname="bg-[#3E37F7] mt-3 py-2 text-white">
+                        <Button onClick={signInUser} type='submit' className="bg-[#3E37F7] mt-3 py-2 text-white w-full">
                             Login
                         </Button>
                     </form>
@@ -104,11 +113,11 @@ const Login = () => {
                     <span className="px-3 text-gray-500 text-sm">OR</span>
                     <div className="flex-1 border-t border-gray-300"></div>
                 </div>
-                <Button onClick={AuthWithGoogle} classname="border bg-white py-2 flex items-center justify-center gap-5">
+                <Button onClick={(e) => AuthWithGoogle(e, navigate)} className="border bg-white py-2 flex items-center justify-center gap-5 w-full">
                     <img className="size-7 " src={googleIcon} alt="" />
                     Login with Google
                 </Button>
-                <Button onClick={AuthWithGitHub} classname="text-white bg-black py-2 flex items-center justify-center gap-5">
+                <Button onClick={(e) => AuthWithGoogle(e, navigate)} className="text-white bg-black py-2 flex items-center justify-center gap-5 w-full">
                     <img className="size-7 " src={githubIcon} alt="" />
                     Login with Github
                 </Button>

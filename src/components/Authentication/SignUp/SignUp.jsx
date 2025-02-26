@@ -1,9 +1,10 @@
 import Input from '../../CommonComponents/Input';
 import Button from '../../CommonComponents/Button';
 import CenterCard from '../CenterCard';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import googleIcon from '../../../assets/google.png';
 import githubIcon from '../../../assets/github.png';
+import logo from '../../../assets/logo.png';
 import { app } from '../../../firebase';
 import {
     getAuth,
@@ -24,7 +25,9 @@ const SignUp = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    
+    const navigate = useNavigate()
+    
     const signUpUser = async (e) => {
         e.preventDefault();
         try {
@@ -39,8 +42,9 @@ const SignUp = () => {
             toast.success(
                 'Account created successfully!',
                 { autoClose: 3000 },
-                { style: { backgroundColor: '#3E37F7', color: 'white' } }
             );
+
+            navigate('/')
 
             setEmail('');
             setName('');
@@ -55,11 +59,10 @@ const SignUp = () => {
             } else if (error.code === 'auth/weak-password') {
                 errorMessage = 'Weak password! Use at least 6 characters.';
             }
-
+            
             toast.error(
                 errorMessage,
                 { autoClose: 3000 },
-                { style: { backgroundColor: '#E74D3C', color: 'white' } }
             );
         }
     };
@@ -72,7 +75,10 @@ const SignUp = () => {
                 theme="colored"
             />
 
-            <CenterCard>
+            <CenterCard className='max-[600px]:w-[80%]'>
+                <div className='flex justify-center'>
+                    <img src={logo} alt="" className='size-24 ' />
+                </div>
                 <h1 className="text-[#3E37F7] text-3xl ">SignUp</h1>
                 <p className="text-[12px] dark:text-white">
                     Hey, enter your details to create a new account!
@@ -104,7 +110,7 @@ const SignUp = () => {
                             value={password}
                         />
                         <Button
-                            classname="bg-[#3E37F7] mt-3 py-2 text-white"
+                            className="bg-[#3E37F7] mt-3 py-2 text-white w-full"
                             type="submit">
                             SignUp
                         </Button>
@@ -121,11 +127,11 @@ const SignUp = () => {
                     <span className="px-3 text-gray-500 text-sm">OR</span>
                     <div className="flex-1 border-t border-gray-300"></div>
                 </div>
-                <Button onClick={AuthWithGoogle} classname="border bg-white py-2 flex items-center justify-center gap-5">
+                <Button onClick={(e) => AuthWithGoogle(e, navigate)} className="border bg-white py-2 flex items-center justify-center gap-5 w-full">
                     <img className="size-7 " src={googleIcon} alt="" />
                     Signup with Google
                 </Button>
-                <Button onClick={AuthWithGitHub} classname="text-white bg-black py-2 flex items-center justify-center gap-5">
+                <Button onClick={(e) => AuthWithGoogle(e, navigate)} className="text-white bg-black py-2 flex items-center justify-center gap-5 w-full">
                     <img className="size-7 " src={githubIcon} alt="" />
                     Signup with Github
                 </Button>
