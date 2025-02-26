@@ -1,10 +1,11 @@
-import { Outlet } from "react-router-dom"
+import { getDatabase, ref, set } from "firebase/database";
+import { app } from "./firebase";
 
 function App() {
 
+
   return (
-    <div className="font-[JetBrains_Mono]">
-      <Outlet />
+    <div >
     </div>
   )
 }

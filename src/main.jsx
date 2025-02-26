@@ -13,6 +13,7 @@ import SignUp from './components/Authentication/SignUp/SignUp.jsx';
 import AuthLayout from './components/Authentication/AuthLayout.jsx';
 import MainLayout from './components/MainLayout/MainLayout.jsx';
 
+
 const router = createBrowserRouter(
     createRoutesFromElements(
         <>
@@ -30,6 +31,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <RouterProvider router={router} />
+        <div className="font-[JetBrains_Mono]">
+            <RouterProvider router={router} />
+        </div>
     </StrictMode>
 );
