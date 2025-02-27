@@ -1,10 +1,15 @@
-import React from 'react'
 import { Outlet } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
 
 const AuthLayout = () => {
   return (
     <div>
-        <Outlet />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="colored"
+      />
+      <Outlet />
     </div>
   )
 }

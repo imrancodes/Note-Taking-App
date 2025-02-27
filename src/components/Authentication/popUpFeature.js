@@ -8,7 +8,6 @@ import {
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { app } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
 
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
@@ -32,7 +31,7 @@ const errorMsg = (err) => {
             toast.error('This email is already registered. Try logging in.');
             break;
         case 'auth/cancelled-popup-request':
-            toast.error('Sign-Up was interrupted. Please try again.');
+            toast.error('Login was interrupted. Please try again.');
             break;
         default:
             toast.error('Something went wrong! Please try again.');

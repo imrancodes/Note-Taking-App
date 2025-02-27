@@ -117,7 +117,7 @@ const Login = () => {
                     <img className="size-7 " src={googleIcon} alt="" />
                     Login with Google
                 </Button>
-                <Button onClick={(e) => AuthWithGoogle(e, navigate)} className="text-white bg-black py-2 flex items-center justify-center gap-5 w-full">
+                <Button onClick={(e) => AuthWithGitHub(e, navigate)} className="text-white bg-black py-2 flex items-center justify-center gap-5 w-full">
                     <img className="size-7 " src={githubIcon} alt="" />
                     Login with Github
                 </Button>

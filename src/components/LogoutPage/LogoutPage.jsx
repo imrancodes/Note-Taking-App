@@ -1,6 +1,4 @@
-import React from 'react';
 import logo from '../../assets/logo.png';
-import Button from '../CommonComponents/Button';
 import { Link } from 'react-router-dom';
 import ThemeToggler from '../ThemeToggler';
 import CenterCard from '../Authentication/CenterCard';
@@ -9,22 +7,26 @@ const LogoutPage = () => {
     return (
         <div>
             <div className="flex justify-between items-center mx-4">
-                <div>
+                <div className='flex items-center max-[500px]:gap-2 gap-6'>
                     <img src={logo} alt="" className="size-20" />
-                </div>
-                <div className="flex items-center gap-7">
                     <div>
                         <ThemeToggler />
                     </div>
+                </div>
+                <div className="flex items-center gap-7">
+                    
                     <div className="flex gap-2">
                         <Link
                             to={'login'}
-                            className="text-[#3E37F7] border border-[#3E37F7] px-4 py-2 rounded">
+                            className="text-[#3E37F7] border border-[#3E37F7] px-4 py-2 rounded transition-all duration-300 hover:bg-[#c0c0fbb8] dark:hover:bg-[#14168291] hover:text-[#3E37F7]"
+                        >
                             LogIn
                         </Link>
+
                         <Link
                             to={'signup'}
-                            className="bg-[#3E37F7] text-white px-4 py-2 rounded">
+                            className="bg-[#3E37F7] text-white px-4 py-2 rounded transition-all duration-300 hover:bg-[#2B2FFF]"
+                        >
                             SignUp
                         </Link>
                     </div>
@@ -35,8 +37,7 @@ const LogoutPage = () => {
                 <div className="dark:text-white">
                     <h1 className="text-4xl pb-4">
                         Welcome to{' '}
-                        <span className="text-[#3E37F7]">CodeScribe</span>!
-                        📓
+                        <span className="text-[#3E37F7]">CodeScribe</span>!📓
                     </h1>
                     <p className='text-xl mb-5'>
                         The ultimate note-taking app designed for coders. ✍️💻
