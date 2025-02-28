@@ -59,7 +59,7 @@ const AddNewNote = () => {
                         </form>
                     </div>
                     <div>
-                        <TextEditor/>
+                        <TextEditor />
                     </div>
                 </div>
             </div>

@@ -1,6 +1,137 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Heebo:wght@100..900&family=Inika:wght@400;700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Kumbh+Sans:wght@100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Varela+Round&display=swap');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.tiptap {
+    min-height: 450px;
+    border: 0px;
+    outline: 0px;
+    padding-inline: 10px;
+    padding-block: 10px;
+    font-size: 20px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.prose h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.prose h2 {
+    font-size: 1.75rem;
+    font-weight: bold;
+}
+
+.prose h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.prose ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.prose ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+}
+
+.prose blockquote {
+    border-left: 4px solid #6b7280; /* Gray border */
+    padding-left: 1rem;
+    font-style: italic;
+    color: #374151; /* Dark gray for light mode */
+}
+
+.dark .prose blockquote {
+    border-left: 4px solid #9ca3af; /* Lighter gray border for dark mode */
+    color: #d1d5db; /* Light gray text in dark mode */
+}
+
+.tiptap {
+    .code-block {
+      position: relative;
+  
+      select {
+        position: absolute;
+        background-color: var(--white);
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="Black" d="M7 10l5 5 5-5z"/></svg>');
+        right: 0.5rem;
+        top: 0.5rem;
+      }
+    }
+  
+    pre {
+      background: #171717;
+      border-radius: 0.5rem;
+      font-family: 'JetBrainsMono', monospace;
+      padding: 0.75rem 1rem;
+      color: white;
+  
+      code {
+        background: none;
+        color: inherit;
+        font-size: 1rem;
+        padding: 0;
+      }
+  
+      /* Code styling */
+      .hljs-comment,
+      .hljs-quote {
+        color: #616161;
+      }
+  
+      .hljs-variable,
+      .hljs-template-variable,
+      .hljs-attribute,
+      .hljs-tag,
+      .hljs-name,
+      .hljs-regexp,
+      .hljs-link,
+      .hljs-name,
+      .hljs-selector-id,
+      .hljs-selector-class {
+        color: #f98181;
+      }
+  
+      .hljs-number,
+      .hljs-meta,
+      .hljs-built_in,
+      .hljs-builtin-name,
+      .hljs-literal,
+      .hljs-type,
+      .hljs-params {
+        color: #fbbc88;
+      }
+  
+      .hljs-string,
+      .hljs-symbol,
+      .hljs-bullet {
+        color: #b9f18d;
+      }
+  
+      .hljs-title,
+      .hljs-section {
+        color: #faf594;
+      }
+  
+      .hljs-keyword,
+      .hljs-selector-tag {
+        color: #70cff8;
+      }
+  
+      .hljs-emphasis {
+        font-style: italic;
+      }
+  
+      .hljs-strong {
+        font-weight: 700;
+      }
+    }
+  }
 

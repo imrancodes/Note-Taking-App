@@ -31,9 +31,9 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById('root')).render(
-
+    <StrictMode>
         <div className="font-[JetBrains_Mono]">
             <RouterProvider router={router} />
         </div>
-
+    </StrictMode>
 );

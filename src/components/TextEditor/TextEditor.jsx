@@ -1,166 +1,210 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { createLowlight } from "lowlight";
-import "highlight.js/styles/github-dark.css";
+import React from 'react';
+import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
+import { createLowlight, all } from 'lowlight';
+import 'highlight.js/styles/github-dark.css';
+import '../../index.css';
+import { FaBold, FaItalic, FaStrikethrough } from 'react-icons/fa';
+import { FaUnderline } from 'react-icons/fa6';
+import { LuHeading1, LuHeading2, LuHeading3 } from 'react-icons/lu';
+import { GoListUnordered, GoListOrdered } from 'react-icons/go';
+import { GrBlockQuote } from 'react-icons/gr';
+import { BiCodeBlock } from 'react-icons/bi';
+import { FaCode } from 'react-icons/fa6';
+import { IoIosLink } from 'react-icons/io';
+import { FaLinkSlash, FaRegImage } from 'react-icons/fa6';
+import Heading from '@tiptap/extension-heading';
+import javascript from 'highlight.js/lib/languages/javascript';
+import css from 'highlight.js/lib/languages/css';
+import ts from 'highlight.js/lib/languages/typescript';
+import html from 'highlight.js/lib/languages/xml';
+import CodeBlockComponent from './CodeBlockComponent'; 
 
-const lowlight = createLowlight();
+const lowlight = createLowlight(all);
+
+lowlight.register('html', html);
+lowlight.register('css', css);
+lowlight.register('js', javascript);
+lowlight.register('ts', ts);
 
 const TextEditor = () => {
   const editor = useEditor({
     extensions: [
-      StarterKit, // Basic formatting (Bold, Italic, Lists, etc.)
-      Underline, // Underline text
-      Link, // Add hyperlinks
-      Image, // Add images
-      CodeBlockLowlight.configure({ lowlight }), // Code block with syntax highlighting
+      Heading.configure({ levels: [1, 2, 3] }),
+      StarterKit.configure({
+        heading: false,
+      }),
+      Underline,
+      Link,
+      Image,
+      CodeBlockLowlight
+        .extend({
+          addNodeView() {
+            return ReactNodeViewRenderer(CodeBlockComponent);
+          },
+        })
+        .configure({ lowlight }),
     ],
     content: `<p>Hello, start writing here...</p>`,
   });
 
-  if (!editor) return null; // Prevent errors if the editor is not ready
+  if (!editor) return null;
 
   return (
-    <div className="p-4 dark:bg-[#303034] bg-[#E5E7EB] rounded-xl shadow my-6">
-      {/* Toolbar */}
-      <div className="flex flex-wrap gap-2 mb-2 p-2 bg-gray-200 dark:bg-gray-700 rounded">
+    <>
+      <div className="flex flex-wrap gap-5 p-2 dark:text-white rounded mt-3 text-2xl">
         {/* Bold */}
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`p-2 rounded ${editor.isActive("bold") ? "bg-gray-400" : ""}`}
-        >
-          B
+          className={`p-2 rounded ${editor.isActive('bold') ? 'bg-[#3E35F0] text-white' : ''
+            }`}>
+          <FaBold />
         </button>
 
         {/* Italic */}
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`p-2 rounded ${editor.isActive("italic") ? "bg-gray-400" : ""}`}
-        >
-          I
+          className={`p-2 rounded ${editor.isActive('italic') ? 'bg-[#3E35F0] text-white' : ''
+            }`}>
+          <FaItalic />
         </button>
 
         {/* Underline */}
-        <button 
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={`p-2 rounded ${editor.isActive("underline") ? "bg-gray-400" : ""}`}
-        >
-          U
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleUnderline().run()
+          }
+          className={`p-2 rounded ${editor.isActive('underline') ? 'bg-[#3E35F0] text-white' : ''
+            }`}>
+          <FaUnderline />
         </button>
 
         {/* Strikethrough */}
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`p-2 rounded ${editor.isActive("strike") ? "bg-gray-400" : ""}`}
-        >
-          S̶
+          className={`p-2 rounded ${editor.isActive('strike') ? 'bg-[#3E35F0] text-white' : ''
+            }`}>
+          <FaStrikethrough />
         </button>
 
         {/* Headings (H1, H2, H3) */}
-        <button 
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className={`p-2 rounded ${editor.isActive("heading", { level: 1 }) ? "bg-gray-400" : ""}`}
-        >
-          H1
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+          className={`p-2 rounded ${editor.isActive('heading', { level: 1 })
+            ? 'bg-[#3E35F0] text-white'
+            : ''
+            }`}>
+          <LuHeading1 />
         </button>
 
-        <button 
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={`p-2 rounded ${editor.isActive("heading", { level: 2 }) ? "bg-gray-400" : ""}`}
-        >
-          H2
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+          className={`p-2 rounded ${editor.isActive('heading', { level: 2 })
+            ? 'bg-[#3E35F0] text-white'
+            : ''
+            }`}>
+          <LuHeading2 />
         </button>
 
-        <button 
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={`p-2 rounded ${editor.isActive("heading", { level: 3 }) ? "bg-gray-400" : ""}`}
-        >
-          H3
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
+          className={`p-2 rounded ${editor.isActive('heading', { level: 3 })
+            ? 'bg-[#3E35F0] text-white'
+            : ''
+            }`}>
+          <LuHeading3 />
         </button>
 
         {/* Bullet List */}
-        <button 
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`p-2 rounded ${editor.isActive("bulletList") ? "bg-gray-400" : ""}`}
+        <button
+          onClick={() => editor.commands.toggleBulletList()}
+          className={`p-2 rounded ${editor.isActive('bulletList') ? 'bg-[#3E35F0] text-white' : ''}`}
         >
-          • List
+          <GoListUnordered />
         </button>
 
         {/* Numbered List */}
-        <button 
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`p-2 rounded ${editor.isActive("orderedList") ? "bg-gray-400" : ""}`}
+        <button
+          onClick={() => editor.commands.toggleOrderedList()}
+          className={`p-2 rounded ${editor.isActive('orderedList') ? 'bg-[#3E35F0] text-white' : ''}`}
         >
-          1. List
+          <GoListOrdered />
         </button>
 
         {/* Blockquote */}
-        <button 
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={`p-2 rounded ${editor.isActive("blockquote") ? "bg-gray-400" : ""}`}
-        >
-          "
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleBlockquote().run()
+          }
+          className={`p-2 rounded ${editor.isActive('blockquote') ? 'bg-[#3E35F0] text-white' : ''
+            }`}>
+          <GrBlockQuote />
         </button>
 
         {/* Code Block */}
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={`p-2 rounded ${editor.isActive("codeBlock") ? "bg-gray-400" : ""}`}
+          className={`p-2 rounded ${editor.isActive('codeBlock') ? 'bg-[#3E35F0]' : ''}`}
         >
-         {/* Code Icon */}
+          <BiCodeBlock />
         </button>
 
         {/* Inline Code */}
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleCode().run()}
-          className={`p-2 rounded ${editor.isActive("code") ? "bg-gray-400" : ""}`}
-        >
-          `code`
+          className={`p-2 rounded ${editor.isActive('code') ? 'bg-[#3E35F0] text-white' : ''
+            }`}>
+          <FaCode />
         </button>
 
         {/* Add Link */}
-        <button 
+        <button
           onClick={() => {
-            const url = prompt("Enter URL:");
+            const url = prompt('Enter URL:');
             if (url) {
               editor.chain().focus().setLink({ href: url }).run();
             }
           }}
-          className="p-2 rounded"
-        >
-          🔗
+          className="p-2 rounded">
+          <IoIosLink />
         </button>
 
         {/* Remove Link */}
-        <button 
+        <button
           onClick={() => editor.chain().focus().unsetLink().run()}
-          className="p-2 rounded"
-        >
-          ❌🔗
+          className="p-2 rounded">
+          <FaLinkSlash />
         </button>
 
         {/* Add Image */}
-        <button 
+        <button
           onClick={() => {
-            const url = prompt("Enter image URL:");
+            let url = prompt('Enter URL:');
             if (url) {
-              editor.chain().focus().setImage({ src: url }).run();
+              editor.chain().focus().setLink({ href: url }).run();
             }
           }}
-          className="p-2 rounded"
-        >
-          🖼️
+          className="p-2 rounded">
+          <FaRegImage />
         </button>
-
       </div>
-
-      {/* Text Editor */}
-      <EditorContent editor={editor} className="prose max-w-none dark:text-white" />
-    
-    </div>
+      <div className="p-4 dark:bg-[#303034] bg-[#E5E7EB] rounded-xl shadow mb-6 mt-3">
+        <EditorContent
+          editor={editor}
+          className="prose max-w-none dark:text-white"
+        />
+      </div>
+    </>
   );
 };
 
