@@ -12,13 +12,14 @@ import Login from './components/Authentication/Login/Login.jsx';
 import SignUp from './components/Authentication/SignUp/SignUp.jsx';
 import AuthLayout from './components/Authentication/AuthLayout.jsx';
 import MainLayout from './components/MainLayout/MainLayout.jsx';
-
+import AddNewNote from './components/Notes/AddNewNote.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <>
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<App />} />
+                <Route path="new" element={<AddNewNote />} />
             </Route>
 
             <Route element={<AuthLayout />}>
@@ -30,9 +31,9 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
+
         <div className="font-[JetBrains_Mono]">
             <RouterProvider router={router} />
         </div>
-    </StrictMode>
+
 );

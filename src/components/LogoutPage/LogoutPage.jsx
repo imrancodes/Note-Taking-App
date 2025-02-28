@@ -1,20 +1,15 @@
-import logo from '../../assets/logo.png';
+
 import { Link } from 'react-router-dom';
-import ThemeToggler from '../ThemeToggler';
 import CenterCard from '../Authentication/CenterCard';
+import LogoAndTheme from '../LogoAndTheme';
 
 const LogoutPage = () => {
     return (
         <div>
             <div className="flex justify-between items-center mx-4">
-                <div className='flex items-center max-[500px]:gap-2 gap-6'>
-                    <img src={logo} alt="" className="size-20" />
-                    <div>
-                        <ThemeToggler />
-                    </div>
-                </div>
+                <LogoAndTheme />
                 <div className="flex items-center gap-7">
-                    
+
                     <div className="flex gap-2">
                         <Link
                             to={'login'}
