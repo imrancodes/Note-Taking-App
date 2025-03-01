@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import Button from '../CommonComponents/Button';
 import { app } from '../../firebase';
 import LogoAndTheme from '../LogoAndTheme';
+// import { useNavigate } from 'react-router-dom';
 
 const auth = getAuth(app);
 
 const Navbar = () => {
+    // const navigate = useNavigate()
     const [userName, setUserName] = useState(null);
     const [photoUrl, setPhotoUrl] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +22,11 @@ const Navbar = () => {
 
         return () => unsubscribe();
     }, []);
+
+    const handleLogout = () => {
+        signOut(auth)
+        // navigate('/')
+    }
 
     return (
         <>
@@ -40,7 +47,7 @@ const Navbar = () => {
                     </div>
                     <Button
                         className="text-white bg-[#E74D3C] hover:bg-[#f83621] px-4 py-2 max-[500px]:absolute top-[115px] right-[48px] max-[500px]:group-hover:block max-[500px]:hidden"
-                        onClick={() => signOut(auth)}>
+                        onClick={handleLogout}>
                         logOut
                     </Button>
                 </div>

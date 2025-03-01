@@ -18,29 +18,29 @@ import { FaCode } from 'react-icons/fa6';
 import { IoIosLink } from 'react-icons/io';
 import { FaLinkSlash, FaRegImage } from 'react-icons/fa6';
 import Heading from '@tiptap/extension-heading';
-import javascript from 'highlight.js/lib/languages/javascript';
 import css from 'highlight.js/lib/languages/css';
-import ts from 'highlight.js/lib/languages/typescript';
 import html from 'highlight.js/lib/languages/xml';
-import CodeBlockComponent from './CodeBlockComponent'; 
+import CodeBlockComponent from './CodeBlockComponent';
+import Placeholder from '@tiptap/extension-placeholder'
 
 const lowlight = createLowlight(all);
 
 lowlight.register('html', html);
 lowlight.register('css', css);
-lowlight.register('js', javascript);
-lowlight.register('ts', ts);
-
 const TextEditor = () => {
   const editor = useEditor({
     extensions: [
       Heading.configure({ levels: [1, 2, 3] }),
       StarterKit.configure({
         heading: false,
+        codeBlock: false
       }),
       Underline,
       Link,
       Image,
+      Placeholder.configure({
+        placeholder: 'Write your notes here...',
+      }),
       CodeBlockLowlight
         .extend({
           addNodeView() {
@@ -49,7 +49,7 @@ const TextEditor = () => {
         })
         .configure({ lowlight }),
     ],
-    content: `<p>Hello, start writing here...</p>`,
+    content: `<p></p>`,
   });
 
   if (!editor) return null;
@@ -170,9 +170,9 @@ const TextEditor = () => {
         {/* Add Link */}
         <button
           onClick={() => {
-            const url = prompt('Enter URL:');
+            const url = prompt('Enter URL (Make sure to start with https://):')
             if (url) {
-              editor.chain().focus().setLink({ href: url }).run();
+              editor.chain().focus().setLink({ href: url, target: '_blank' }).run();
             }
           }}
           className="p-2 rounded">
@@ -198,7 +198,7 @@ const TextEditor = () => {
           <FaRegImage />
         </button>
       </div>
-      <div className="p-4 dark:bg-[#303034] bg-[#E5E7EB] rounded-xl shadow mb-6 mt-3">
+      <div className="p-4 max-[500px]:px-2 dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow mb-4 mt-3">
         <EditorContent
           editor={editor}
           className="prose max-w-none dark:text-white"

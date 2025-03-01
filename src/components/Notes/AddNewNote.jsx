@@ -4,6 +4,7 @@ import { IoMdClose } from 'react-icons/io';
 import Input from '../CommonComponents/Input';
 import { useId, useState } from 'react';
 import TextEditor from '../TextEditor/TextEditor';
+import Button from '../CommonComponents/Button';
 
 const AddNewNote = () => {
     const id = useId();
@@ -25,9 +26,9 @@ const AddNewNote = () => {
                 </div>
                 {/* Note Editor */}
                 <div>
-                    <div className="dark:bg-[#303034] bg-[#E5E7EB] rounded-xl shadow">
+                    <div className="dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow">
                         <Input
-                            classname="border-0 font-bold max-[500px]:text-2xl text-3xl pl-6"
+                            classname="border-0 font-bold max-[500px]:text-2xl text-3xl pl-6 placeholder:text-[#adb5bd]"
                             placeholder="Add Note Title..."
                         />
                         <form className="px-6 dark:text-white pb-4">
@@ -61,6 +62,10 @@ const AddNewNote = () => {
                     <div>
                         <TextEditor />
                     </div>
+                </div>
+                {/* Submit Button */}
+                <div>
+                    <Button className='bg-[#3E37F7] text-white text-xl px-5 py-2 hover:bg-[#2B2FFF] rounded-lg mb-4'>Submit</Button>
                 </div>
             </div>
         </>

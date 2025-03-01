@@ -38,100 +38,151 @@ button {
 
 .prose ol {
     list-style-type: decimal;
-    padding-left: 1.5rem;
+    padding-left: 2.5rem;
 }
 
 .prose blockquote {
-    border-left: 4px solid #6b7280; /* Gray border */
+    border-left: 4px solid #6b7280;
     padding-left: 1rem;
     font-style: italic;
-    color: #374151; /* Dark gray for light mode */
+    color: #374151;
 }
 
 .dark .prose blockquote {
-    border-left: 4px solid #9ca3af; /* Lighter gray border for dark mode */
-    color: #d1d5db; /* Light gray text in dark mode */
+    border-left: 4px solid #9ca3af;
+    color: #d1d5db;
+}
+
+.light .tiptap {
+    pre {
+        background: #404040;
+    }
+}
+
+@media (max-width: 600px) {
+    .tiptap pre {
+        padding: 3rem 1rem 0.75rem 1rem !important;
+    }
 }
 
 .tiptap {
     .code-block {
-      position: relative;
-  
-      select {
-        position: absolute;
-        background-color: var(--white);
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="Black" d="M7 10l5 5 5-5z"/></svg>');
-        right: 0.5rem;
-        top: 0.5rem;
-      }
-    }
-  
-    pre {
-      background: #171717;
-      border-radius: 0.5rem;
-      font-family: 'JetBrainsMono', monospace;
-      padding: 0.75rem 1rem;
-      color: white;
-  
-      code {
-        background: none;
-        color: inherit;
-        font-size: 1rem;
-        padding: 0;
-      }
-  
-      /* Code styling */
-      .hljs-comment,
-      .hljs-quote {
-        color: #616161;
-      }
-  
-      .hljs-variable,
-      .hljs-template-variable,
-      .hljs-attribute,
-      .hljs-tag,
-      .hljs-name,
-      .hljs-regexp,
-      .hljs-link,
-      .hljs-name,
-      .hljs-selector-id,
-      .hljs-selector-class {
-        color: #f98181;
-      }
-  
-      .hljs-number,
-      .hljs-meta,
-      .hljs-built_in,
-      .hljs-builtin-name,
-      .hljs-literal,
-      .hljs-type,
-      .hljs-params {
-        color: #fbbc88;
-      }
-  
-      .hljs-string,
-      .hljs-symbol,
-      .hljs-bullet {
-        color: #b9f18d;
-      }
-  
-      .hljs-title,
-      .hljs-section {
-        color: #faf594;
-      }
-  
-      .hljs-keyword,
-      .hljs-selector-tag {
-        color: #70cff8;
-      }
-  
-      .hljs-emphasis {
-        font-style: italic;
-      }
-  
-      .hljs-strong {
-        font-weight: 700;
-      }
-    }
-  }
+        position: relative;
 
+        select {
+            position: absolute;
+            background-color: var(--white);
+            right: 0.5rem;
+            top: 0.5rem;
+        }
+    }
+
+    pre {
+        background: #171717;
+        border-radius: 0.5rem;
+        font-family: 'JetBrainsMono', monospace;
+        padding: 0.75rem 1rem;
+        color: white;
+
+        code {
+            background: none;
+            color: inherit;
+            font-size: 1rem;
+            padding: 0;
+        }
+
+        .hljs-comment,
+        .hljs-quote {
+            color: #616161;
+        }
+
+        .hljs-variable,
+        .hljs-template-variable,
+        .hljs-attribute,
+        .hljs-tag,
+        .hljs-name,
+        .hljs-regexp,
+        .hljs-link,
+        .hljs-name,
+        .hljs-selector-id,
+        .hljs-selector-class {
+            color: #f98181;
+        }
+
+        .hljs-number,
+        .hljs-meta,
+        .hljs-built_in,
+        .hljs-builtin-name,
+        .hljs-literal,
+        .hljs-type,
+        .hljs-params {
+            color: #fbbc88;
+        }
+
+        .hljs-string,
+        .hljs-symbol,
+        .hljs-bullet {
+            color: #b9f18d;
+        }
+
+        .hljs-title,
+        .hljs-section {
+            color: #faf594;
+        }
+
+        .hljs-keyword,
+        .hljs-selector-tag {
+            color: #70cff8;
+        }
+
+        .hljs-emphasis {
+            font-style: italic;
+        }
+
+        .hljs-strong {
+            font-weight: 700;
+        }
+    }
+}
+
+.dark .prose select option {
+    background-color: black;
+}
+
+.prose select {
+    color: white;
+    border: 1px solid white;
+    border-radius: 0.25rem;
+    padding-inline: 8px;
+    padding-block: 2px;
+    cursor: pointer;
+}
+
+.light .prose select option {
+    color: black;
+}
+
+.prose p code {
+    background: gray;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    color: white;
+}
+
+.prose a {
+    color: #a5b4fc;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.light .prose a {
+    color: #3e37f7;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
