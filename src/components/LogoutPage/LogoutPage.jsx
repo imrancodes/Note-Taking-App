@@ -35,7 +35,7 @@ const LogoutPage = () => {
                         <span className="text-[#3E37F7]">CodeScribe</span>!📓
                     </h1>
                     <p className='text-xl mb-5'>
-                        The ultimate note-taking app designed for coders. ✍️💻
+                        The ultimate note-taking app, <b>built exclusively for coders.</b> ✍️💻
                         Effortlessly organize your thoughts, snippets, and ideas
                         in one place.
                     </p>

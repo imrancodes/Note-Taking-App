@@ -65,6 +65,10 @@ button {
     }
 }
 
+/* .tiptap pre:hover {
+    background-color: red;
+} */
+
 .tiptap {
     .code-block {
         position: relative;
@@ -155,7 +159,6 @@ button {
     border-radius: 0.25rem;
     padding-inline: 8px;
     padding-block: 2px;
-    cursor: pointer;
 }
 
 .light .prose select option {

@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import Button from '../CommonComponents/Button';
 import { app } from '../../firebase';
 import LogoAndTheme from '../LogoAndTheme';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const auth = getAuth(app);
 
 const Navbar = () => {
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     const [userName, setUserName] = useState(null);
     const [photoUrl, setPhotoUrl] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -24,8 +24,14 @@ const Navbar = () => {
     }, []);
 
     const handleLogout = () => {
-        signOut(auth)
-        // navigate('/')
+        const confirmLogout = confirm("Are you sure you want to logOut?")
+        if (confirmLogout) {
+            signOut(auth)
+            navigate('/')
+        }else{
+            return ;
+        }
+
     }
 
     return (
@@ -72,10 +78,7 @@ const Navbar = () => {
                     <Button
                         className={`text-white bg-[#E74D3C] hover:bg-[#f83621] px-4 py-2 max-[500px]:absolute top-[115px] right-[48px] min-[500px]:hidden ${isOpen ? 'block' : 'hidden'
                             } group-hover:block`}
-                        onClick={() => {
-                            signOut(auth);
-                            setIsOpen(false);
-                        }}>
+                        onClick={handleLogout}>
                         logOut
                     </Button>
                 </div>

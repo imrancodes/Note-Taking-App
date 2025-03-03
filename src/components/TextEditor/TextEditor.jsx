@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import StarterKit from '@tiptap/starter-kit';
@@ -21,19 +21,34 @@ import Heading from '@tiptap/extension-heading';
 import css from 'highlight.js/lib/languages/css';
 import html from 'highlight.js/lib/languages/xml';
 import CodeBlockComponent from './CodeBlockComponent';
-import Placeholder from '@tiptap/extension-placeholder'
+import Placeholder from '@tiptap/extension-placeholder';
 
 const lowlight = createLowlight(all);
 
 lowlight.register('html', html);
 lowlight.register('css', css);
-const TextEditor = () => {
+
+const TextEditor = ({onContentChange}) => {
+  const [editorContent, setEditorContent] = useState(null)
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const base64Image = reader.result;
+      editor.chain().focus().setImage({ src: base64Image }).run();
+    };
+  };
+
   const editor = useEditor({
     extensions: [
       Heading.configure({ levels: [1, 2, 3] }),
       StarterKit.configure({
         heading: false,
-        codeBlock: false
+        codeBlock: false,
       }),
       Underline,
       Link,
@@ -41,15 +56,18 @@ const TextEditor = () => {
       Placeholder.configure({
         placeholder: 'Write your notes here...',
       }),
-      CodeBlockLowlight
-        .extend({
-          addNodeView() {
-            return ReactNodeViewRenderer(CodeBlockComponent);
-          },
-        })
-        .configure({ lowlight }),
+      CodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlockComponent);
+        },
+      }).configure({ lowlight }),
     ],
-    content: `<p></p>`,
+    content: ``,
+    onUpdate: ({editor}) => {
+      const content = editor.getJSON()
+      setEditorContent(content)
+      onContentChange(content)
+    }
   });
 
   if (!editor) return null;
@@ -68,7 +86,9 @@ const TextEditor = () => {
         {/* Italic */}
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`p-2 rounded ${editor.isActive('italic') ? 'bg-[#3E35F0] text-white' : ''
+          className={`p-2 rounded ${editor.isActive('italic')
+              ? 'bg-[#3E35F0] text-white'
+              : ''
             }`}>
           <FaItalic />
         </button>
@@ -78,7 +98,9 @@ const TextEditor = () => {
           onClick={() =>
             editor.chain().focus().toggleUnderline().run()
           }
-          className={`p-2 rounded ${editor.isActive('underline') ? 'bg-[#3E35F0] text-white' : ''
+          className={`p-2 rounded ${editor.isActive('underline')
+              ? 'bg-[#3E35F0] text-white'
+              : ''
             }`}>
           <FaUnderline />
         </button>
@@ -86,7 +108,9 @@ const TextEditor = () => {
         {/* Strikethrough */}
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`p-2 rounded ${editor.isActive('strike') ? 'bg-[#3E35F0] text-white' : ''
+          className={`p-2 rounded ${editor.isActive('strike')
+              ? 'bg-[#3E35F0] text-white'
+              : ''
             }`}>
           <FaStrikethrough />
         </button>
@@ -97,8 +121,8 @@ const TextEditor = () => {
             editor.chain().focus().toggleHeading({ level: 1 }).run()
           }
           className={`p-2 rounded ${editor.isActive('heading', { level: 1 })
-            ? 'bg-[#3E35F0] text-white'
-            : ''
+              ? 'bg-[#3E35F0] text-white'
+              : ''
             }`}>
           <LuHeading1 />
         </button>
@@ -108,8 +132,8 @@ const TextEditor = () => {
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
           className={`p-2 rounded ${editor.isActive('heading', { level: 2 })
-            ? 'bg-[#3E35F0] text-white'
-            : ''
+              ? 'bg-[#3E35F0] text-white'
+              : ''
             }`}>
           <LuHeading2 />
         </button>
@@ -119,8 +143,8 @@ const TextEditor = () => {
             editor.chain().focus().toggleHeading({ level: 3 }).run()
           }
           className={`p-2 rounded ${editor.isActive('heading', { level: 3 })
-            ? 'bg-[#3E35F0] text-white'
-            : ''
+              ? 'bg-[#3E35F0] text-white'
+              : ''
             }`}>
           <LuHeading3 />
         </button>
@@ -128,16 +152,20 @@ const TextEditor = () => {
         {/* Bullet List */}
         <button
           onClick={() => editor.commands.toggleBulletList()}
-          className={`p-2 rounded ${editor.isActive('bulletList') ? 'bg-[#3E35F0] text-white' : ''}`}
-        >
+          className={`p-2 rounded ${editor.isActive('bulletList')
+              ? 'bg-[#3E35F0] text-white'
+              : ''
+            }`}>
           <GoListUnordered />
         </button>
 
         {/* Numbered List */}
         <button
           onClick={() => editor.commands.toggleOrderedList()}
-          className={`p-2 rounded ${editor.isActive('orderedList') ? 'bg-[#3E35F0] text-white' : ''}`}
-        >
+          className={`p-2 rounded ${editor.isActive('orderedList')
+              ? 'bg-[#3E35F0] text-white'
+              : ''
+            }`}>
           <GoListOrdered />
         </button>
 
@@ -146,16 +174,20 @@ const TextEditor = () => {
           onClick={() =>
             editor.chain().focus().toggleBlockquote().run()
           }
-          className={`p-2 rounded ${editor.isActive('blockquote') ? 'bg-[#3E35F0] text-white' : ''
+          className={`p-2 rounded ${editor.isActive('blockquote')
+              ? 'bg-[#3E35F0] text-white'
+              : ''
             }`}>
           <GrBlockQuote />
         </button>
 
         {/* Code Block */}
         <button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={`p-2 rounded ${editor.isActive('codeBlock') ? 'bg-[#3E35F0]' : ''}`}
-        >
+          onClick={() =>
+            editor.chain().focus().toggleCodeBlock().run()
+          }
+          className={`p-2 rounded ${editor.isActive('codeBlock') ? 'bg-[#3E35F0]' : ''
+            }`}>
           <BiCodeBlock />
         </button>
 
@@ -170,9 +202,15 @@ const TextEditor = () => {
         {/* Add Link */}
         <button
           onClick={() => {
-            const url = prompt('Enter URL (Make sure to start with https://):')
+            const url = prompt(
+              'Enter URL (Make sure to start with https://):'
+            );
             if (url) {
-              editor.chain().focus().setLink({ href: url, target: '_blank' }).run();
+              editor
+                .chain()
+                .focus()
+                .setLink({ href: url, target: '_blank' })
+                .run();
             }
           }}
           className="p-2 rounded">
@@ -187,17 +225,20 @@ const TextEditor = () => {
         </button>
 
         {/* Add Image */}
-        <button
-          onClick={() => {
-            let url = prompt('Enter URL:');
-            if (url) {
-              editor.chain().focus().setLink({ href: url }).run();
-            }
-          }}
-          className="p-2 rounded">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+          id="imageUpload"
+        />
+        <label
+          htmlFor="imageUpload"
+          className="p-2 rounded cursor-pointer">
           <FaRegImage />
-        </button>
+        </label>
       </div>
+
       <div className="p-4 max-[500px]:px-2 dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow mb-4 mt-3">
         <EditorContent
           editor={editor}
@@ -207,5 +248,6 @@ const TextEditor = () => {
     </>
   );
 };
+
 
 export default TextEditor;
