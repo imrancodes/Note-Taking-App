@@ -1,13 +1,4 @@
-import { useState } from 'react';
-import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import Link from '@tiptap/extension-link';
-import Image from '@tiptap/extension-image';
-import { createLowlight, all } from 'lowlight';
-import 'highlight.js/styles/github-dark.css';
-import '../../index.css';
+
 import { FaBold, FaItalic, FaStrikethrough } from 'react-icons/fa';
 import { FaUnderline } from 'react-icons/fa6';
 import { LuHeading1, LuHeading2, LuHeading3 } from 'react-icons/lu';
@@ -17,19 +8,11 @@ import { BiCodeBlock } from 'react-icons/bi';
 import { FaCode } from 'react-icons/fa6';
 import { IoIosLink } from 'react-icons/io';
 import { FaLinkSlash, FaRegImage } from 'react-icons/fa6';
-import Heading from '@tiptap/extension-heading';
-import css from 'highlight.js/lib/languages/css';
-import html from 'highlight.js/lib/languages/xml';
-import CodeBlockComponent from './CodeBlockComponent';
-import Placeholder from '@tiptap/extension-placeholder';
+import PropTypes from 'prop-types';
 
-const lowlight = createLowlight(all);
 
-lowlight.register('html', html);
-lowlight.register('css', css);
+const TextEditor = ({ editor }) => {
 
-const TextEditor = ({onContentChange}) => {
-  const [editorContent, setEditorContent] = useState(null)
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -43,34 +26,7 @@ const TextEditor = ({onContentChange}) => {
     };
   };
 
-  const editor = useEditor({
-    extensions: [
-      Heading.configure({ levels: [1, 2, 3] }),
-      StarterKit.configure({
-        heading: false,
-        codeBlock: false,
-      }),
-      Underline,
-      Link,
-      Image,
-      Placeholder.configure({
-        placeholder: 'Write your notes here...',
-      }),
-      CodeBlockLowlight.extend({
-        addNodeView() {
-          return ReactNodeViewRenderer(CodeBlockComponent);
-        },
-      }).configure({ lowlight }),
-    ],
-    content: ``,
-    onUpdate: ({editor}) => {
-      const content = editor.getJSON()
-      setEditorContent(content)
-      onContentChange(content)
-    }
-  });
-
-  if (!editor) return null;
+  if (!editor) return null
 
   return (
     <>
@@ -87,8 +43,8 @@ const TextEditor = ({onContentChange}) => {
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`p-2 rounded ${editor.isActive('italic')
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <FaItalic />
         </button>
@@ -99,8 +55,8 @@ const TextEditor = ({onContentChange}) => {
             editor.chain().focus().toggleUnderline().run()
           }
           className={`p-2 rounded ${editor.isActive('underline')
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <FaUnderline />
         </button>
@@ -109,8 +65,8 @@ const TextEditor = ({onContentChange}) => {
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={`p-2 rounded ${editor.isActive('strike')
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <FaStrikethrough />
         </button>
@@ -121,8 +77,8 @@ const TextEditor = ({onContentChange}) => {
             editor.chain().focus().toggleHeading({ level: 1 }).run()
           }
           className={`p-2 rounded ${editor.isActive('heading', { level: 1 })
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <LuHeading1 />
         </button>
@@ -132,8 +88,8 @@ const TextEditor = ({onContentChange}) => {
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
           className={`p-2 rounded ${editor.isActive('heading', { level: 2 })
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <LuHeading2 />
         </button>
@@ -143,8 +99,8 @@ const TextEditor = ({onContentChange}) => {
             editor.chain().focus().toggleHeading({ level: 3 }).run()
           }
           className={`p-2 rounded ${editor.isActive('heading', { level: 3 })
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <LuHeading3 />
         </button>
@@ -153,8 +109,8 @@ const TextEditor = ({onContentChange}) => {
         <button
           onClick={() => editor.commands.toggleBulletList()}
           className={`p-2 rounded ${editor.isActive('bulletList')
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <GoListUnordered />
         </button>
@@ -163,8 +119,8 @@ const TextEditor = ({onContentChange}) => {
         <button
           onClick={() => editor.commands.toggleOrderedList()}
           className={`p-2 rounded ${editor.isActive('orderedList')
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <GoListOrdered />
         </button>
@@ -175,8 +131,8 @@ const TextEditor = ({onContentChange}) => {
             editor.chain().focus().toggleBlockquote().run()
           }
           className={`p-2 rounded ${editor.isActive('blockquote')
-              ? 'bg-[#3E35F0] text-white'
-              : ''
+            ? 'bg-[#3E35F0] text-white'
+            : ''
             }`}>
           <GrBlockQuote />
         </button>
@@ -238,16 +194,12 @@ const TextEditor = ({onContentChange}) => {
           <FaRegImage />
         </label>
       </div>
-
-      <div className="p-4 max-[500px]:px-2 dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow mb-4 mt-3">
-        <EditorContent
-          editor={editor}
-          className="prose max-w-none dark:text-white"
-        />
-      </div>
     </>
   );
 };
 
+TextEditor.propTypes = {
+  editor: PropTypes.object,
+};
 
 export default TextEditor;

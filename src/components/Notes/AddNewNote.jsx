@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import { IoMdClose } from 'react-icons/io';
 import Input from '../CommonComponents/Input';
@@ -7,6 +7,7 @@ import TextEditor from '../TextEditor/TextEditor';
 import Button from '../CommonComponents/Button';
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { app } from '../../firebase';
+import TipTapRender from '../TextEditor/TipTapRender';
 
 const db = getFirestore(app)
 
@@ -16,6 +17,8 @@ const AddNewNote = () => {
     const [category, setCategory] = useState('')
     const id = useId();
 
+    const navigate = useNavigate()
+
     const currentDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(',', '')
 
     const currentTime = new Date().toLocaleTimeString('en', { timeStyle: 'short' })
@@ -23,8 +26,18 @@ const AddNewNote = () => {
     const handleNotesSubmit = async (e) => {
         e.preventDefault()
 
-        if (!title || !editorData || !category) {
-            alert('All fields are required!')
+        if (!title.trim()) {
+            alert("Please provide a title for your note!");
+            return;
+        }
+
+        if (!editorData) {
+            alert("Please provide a description for your note!");
+            return;
+        }
+
+        if (!category) {
+            alert("Please select a category for your note!");
             return;
         }
 
@@ -32,12 +45,12 @@ const AddNewNote = () => {
             const docRef = await addDoc(collection(db, 'notes'), {
                 id: Date.now(),
                 title: title.trim(),
-                category: category.charAt(0).toUpperCase() + category.slice(1),
+                category,
                 notesData: editorData,
                 date: currentDate,
                 time: currentTime
             })
-
+            navigate('/')
             console.log(docRef);
         } catch (err) {
             console.log(err);
@@ -67,7 +80,7 @@ const AddNewNote = () => {
                     <div className="dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow">
                         <Input
                             label={''}
-                            classname="border-0 font-bold max-[500px]:text-2xl text-3xl pl-6 placeholder:text-[#adb5bd]"
+                            classname="border-0 font-bold max-[500px]:text-2xl text-3xl pl-6 placeholder:text-[#adb5bd] focus:border-none"
                             placeholder="Add Note Title..."
                             onValueChange={value => setTitle(value)}
                             value={title}
@@ -96,7 +109,7 @@ const AddNewNote = () => {
                         </form>
                     </div>
                     <div>
-                        <TextEditor onContentChange={setEditorData} />
+                        <TipTapRender onContentChange={setEditorData} />
                     </div>
                 </div>
                 {/* Submit Button */}

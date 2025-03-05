@@ -189,3 +189,9 @@ button {
     height: 0;
     pointer-events: none;
 }
+
+.toolbar, .editor-content {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+  }

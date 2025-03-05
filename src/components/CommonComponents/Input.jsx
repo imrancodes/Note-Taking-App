@@ -17,7 +17,7 @@ const Input = ({
                 type={type}
                 value={value}
                 {...props}
-                className={`pr-4 pl-2 py-2 outline-0 border border-gray-400 w-full rounded ${classname} my-2 dark:text-white`}
+                className={`pr-4 pl-2 py-2 outline-0 border border-gray-400 w-full rounded ${classname} my-2 dark:text-white focus:border focus:border-[#3E37F7]`}
                 onChange={(e) => onValueChange && onValueChange(e.target.value)}
                 id={id}
             />
