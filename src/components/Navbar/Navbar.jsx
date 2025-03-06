@@ -36,7 +36,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="flex justify-between items-center mx-4">
+            <nav className="flex justify-between items-center px-4">
                 <LogoAndTheme />
                 <div className="relative flex items-center gap-10 group max-[500px]:hidden">
                     <div className="flex items-center gap-x-1.5 relative">
@@ -83,7 +83,7 @@ const Navbar = () => {
                     </Button>
                 </div>
             </nav>
-            <hr className="text-gray-600" />
+            <hr className='text-gray-500' />
         </>
     )
 }

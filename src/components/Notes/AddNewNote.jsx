@@ -109,7 +109,7 @@ const AddNewNote = () => {
                         </form>
                     </div>
                     <div>
-                        <TipTapRender onContentChange={setEditorData} />
+                        <TipTapRender onContentChange={setEditorData} className='p-4 max-[500px]:px-2 dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow mb-4 mt-3'/>
                     </div>
                 </div>
                 {/* Submit Button */}

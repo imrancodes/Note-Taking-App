@@ -20,7 +20,7 @@ const lowlight = createLowlight(all);
 lowlight.register('html', html);
 lowlight.register('css', css);
 
-const TipTapRender = ({ initialContent = '', editable = true, onContentChange }) => {
+const TipTapRender = ({ initialContent = '', editable = true, onContentChange, className = '' }) => {
 
     const [editorContent, setEditorContent] = useState(initialContent)
 
@@ -62,7 +62,7 @@ const TipTapRender = ({ initialContent = '', editable = true, onContentChange })
     return (
         <>
         {editable && <TextEditor editor={editor} />}
-        <div className="p-4 max-[500px]:px-2 dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow mb-4 mt-3">
+        <div className={`${className}`}>
             <EditorContent
                 editor={editor}
                 className="prose max-w-none dark:text-white"

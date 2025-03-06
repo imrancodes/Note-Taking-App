@@ -13,6 +13,7 @@ import SignUp from './components/Authentication/SignUp/SignUp.jsx';
 import AuthLayout from './components/Authentication/AuthLayout.jsx';
 import MainLayout from './components/MainLayout/MainLayout.jsx';
 import AddNewNote from './components/Notes/AddNewNote.jsx';
+import EditNotes from './components/Notes/EditNotes.jsx'
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<App />} />
                 <Route path="new" element={<AddNewNote />} />
+                {/* <Route path="edit" element={<EditNotes />} /> */}
             </Route>
 
             <Route element={<AuthLayout />}>
