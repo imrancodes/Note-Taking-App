@@ -44,7 +44,7 @@ const TipTapRender = ({ initialContent = '', editable = true, onContentChange, c
                 },
             }).configure({ lowlight }),
         ],
-        content: initialContent,
+        content: editorContent,
         onUpdate: ({ editor }) => {
             const content = editor.getJSON()
             setEditorContent(content)
@@ -65,7 +65,7 @@ const TipTapRender = ({ initialContent = '', editable = true, onContentChange, c
         <div className={`${className}`}>
             <EditorContent
                 editor={editor}
-                className="prose max-w-none dark:text-white"
+                className="prose edit max-w-none dark:text-white"
             />
         </div>
         </>

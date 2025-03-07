@@ -5,7 +5,7 @@ import Input from '../CommonComponents/Input';
 import { useId, useState } from 'react';
 import TextEditor from '../TextEditor/TextEditor';
 import Button from '../CommonComponents/Button';
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { addDoc, collection, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { app } from '../../firebase';
 import TipTapRender from '../TextEditor/TipTapRender';
 
@@ -43,13 +43,17 @@ const AddNewNote = () => {
 
         try {
             const docRef = await addDoc(collection(db, 'notes'), {
-                id: Date.now(),
                 title: title.trim(),
                 category,
                 notesData: editorData,
                 date: currentDate,
                 time: currentTime
             })
+
+            await updateDoc(doc(db, 'notes', docRef.id), {
+                id: docRef.id
+            })
+
             navigate('/')
             console.log(docRef);
         } catch (err) {

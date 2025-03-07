@@ -195,3 +195,7 @@ button {
     visibility: visible !important;
     height: auto !important;
   }
+
+.prose.edit select{
+    pointer-events: none;
+}
