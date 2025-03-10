@@ -21,7 +21,7 @@ const router = createBrowserRouter(
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<App />} />
                 <Route path="new" element={<AddNewNote />} />
-                {/* <Route path="edit/:id" element={<EditNotes />} /> */}
+                <Route path="edit/:noteId" element={<EditNotes />} />
             </Route>
 
             <Route element={<AuthLayout />}>

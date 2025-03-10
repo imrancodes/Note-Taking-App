@@ -1,24 +1,25 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import Navbar from '../Navbar/Navbar';
 import { FaSearch } from 'react-icons/fa';
 import { useEffect, useId, useState } from 'react';
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, getFirestore } from 'firebase/firestore';
 import { app } from '../../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import CenterCard from '../Authentication/CenterCard';
-import { MdDelete } from "react-icons/md";
-import { MdModeEditOutline } from "react-icons/md";
+import { MdDelete } from 'react-icons/md';
 
 const db = getFirestore(app);
 
 const MainPage = () => {
     const id = useId();
     const [notes, setNotes] = useState([]);
-    const [selectedNote, setSelectedNote] = useState(null);
     const [loading, setLoading] = useState(false);
     const [searchItem, setSearchItem] = useState('');
-    const [filteredTitle, setFilteredTitle] = useState(notes);
+    const [filter, setFilter] = useState(notes);
+    const [selectedOption, setSelectedOption] = useState('all');
+
+    const navigate = useNavigate()
 
     const category = [
         'General',
@@ -47,18 +48,22 @@ const MainPage = () => {
         }
     };
 
-    const getNote = async (noteId) => {
-        const ref = doc(db, 'notes', noteId);
-        try {
-            const doc = await getDoc(ref);
-            setSelectedNote(doc.data());
-        } catch (err) {
-            console.log(err);
-        }
-    };
+    // const handleDeleteNotes = (deletedNoteId) => {
+    //     setNotes((prev) => prev.filter((x) => x.id !== deletedNoteId));
+    // };
 
-    const handleDeleteNotes = (deletedNoteId) => {
-        setNotes((prev) => prev.filter((x) => x.id !== deletedNoteId));
+    const deleteNote = async (noteId) => {
+        const confirmDelete = confirm(
+            'Are you sure you want to delete this note?'
+        );
+        if (!confirmDelete) return;
+
+        try {
+            await deleteDoc(doc(db, 'notes', noteId));
+            navigate('/')
+        } catch (error) {
+            console.error('Error deleting note:', error);
+        }
     };
 
     useEffect(() => {
@@ -66,23 +71,22 @@ const MainPage = () => {
     }, []);
 
     useEffect(() => {
-        setFilteredTitle(notes);
-    }, [notes]);
+        let filterNotes = notes;
 
-    const handleOption = () => {
+        if (searchItem) {
+            filterNotes = filterNotes.filter((note) =>
+                note.title.toLowerCase().includes(searchItem.toLowerCase())
+            );
+        }
 
-    }
+        if (selectedOption !== 'all') {
+            filterNotes = filterNotes.filter(
+                (note) => note.category === selectedOption.toLowerCase()
+            );
+        }
 
-    const handleInputChange = (e) => {
-        const searchTerm = e.target.value;
-        setSearchItem(searchTerm);
-
-        const filterNoteByTitle = notes.filter((note) =>
-            note.title.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        setFilteredTitle(filterNoteByTitle);
-    };
+        setFilter(filterNotes);
+    }, [searchItem, selectedOption, notes]);
 
     const categoryCount = notes.map(
         (x) => x.category.charAt(0).toUpperCase() + x.category.slice(1)
@@ -114,7 +118,7 @@ const MainPage = () => {
                         className="w-full pl-3 pr-2 py-3 border-none outline-0"
                         placeholder="Search By Title"
                         value={searchItem}
-                        onChange={handleInputChange}
+                        onChange={(e) => setSearchItem(e.target.value)}
                     />
                 </div>
                 <div className="flex min-[400px]:items-center gap-2 max-[400px]:flex-col items-start">
@@ -122,21 +126,17 @@ const MainPage = () => {
                         Search by Category:{' '}
                     </label>
                     <select
+                        onChange={(e) => setSelectedOption(e.target.value)}
+                        value={selectedOption}
                         name="noteLabel"
                         id={id}
                         className="p-2 rounded dark:bg-[#303034] bg-[#E5E7EB] outline-0 border-0 ">
-                        <option value="">All Notes</option>
-                        <option value="general">General</option>
-                        <option value="work">Work</option>
-                        <option value="todo">Todo</option>
-                        <option value="ideas">Ideas</option>
-                        <option value="learning">Learning</option>
-                        <option value="projects">Projects</option>
-                        <option value="debugging">Debugging</option>
-                        <option value="documentation">Docs</option>
-                        <option value="snippets">Snippets</option>
-                        <option value="favorites">Favorites</option>
-                        <option value="reminders">Reminders</option>
+                        <option value="all">All Notes</option>
+                        {category.map((option, i) => (
+                            <option key={i} value={option}>
+                                {option}
+                            </option>
+                        ))}
                     </select>
                 </div>
             </div>
@@ -168,24 +168,43 @@ const MainPage = () => {
                 </CenterCard>
             ) : (
                 <div className="flex">
-                    {filteredTitle.length === 0 && searchItem ? (
-                        <CenterCard className={'dark:text-white'}>
-                            <p className="text-lg font-semibold">
-                                No search results found for {searchItem}
-                            </p>
-                            <p className="text-sm">
-                                Try a different search term.
-                            </p>
+                    {filter.length === 0 ? (
+                        <CenterCard
+                            className={'max-[500px]:w-[70%] dark:text-white'}>
+                            {searchItem ? (
+                                <p className="text-lg font-semibold">
+                                    No search results found for {searchItem}
+                                </p>
+                            ) : selectedOption !== 'all' ? (
+                                <p className="text-lg font-semibold">
+                                    No notes exist with the {selectedOption}{' '}
+                                    category
+                                </p>
+                            ) : (
+                                <>
+                                    <p className="text-lg font-semibold">
+                                        Your notebook is empty!
+                                    </p>
+                                    <p className="text-sm">
+                                        Start adding notes to stay organized.
+                                    </p>
+                                    <Link
+                                        to="/new"
+                                        className="mt-3 text-center py-2 bg-[#3E37F7] text-white rounded-lg hover:bg-[#2922fc]">
+                                        Create Your First Note
+                                    </Link>
+                                </>
+                            )}
                         </CenterCard>
                     ) : (
                         <>
-                            <div className="flex">
+                            <div className="flex w-full grow">
                                 <aside
-                                    className={`dark:text-white w-fit min-h-[80vh] border-gray-500 ${filteredTitle.length === 0
-                                        ? 'border-r-0'
-                                        : 'border-r'
-                                        } `}>
-                                    <div className={`flex flex-col `}>
+                                    className={`dark:text-white w-fit min-h-[80vh] border-gray-500 hidden md:block ${filter.length === 0
+                                            ? 'border-r-0'
+                                            : 'border-r'
+                                        }`}>
+                                    <div className={`flex flex-col`}>
                                         {category.map((x, i) => {
                                             const count =
                                                 categoryCounts[x] || 0;
@@ -194,61 +213,78 @@ const MainPage = () => {
                                                     <div className="flex items-center justify-between gap-10 px-5 py-5">
                                                         <div className="flex items-center gap-4">
                                                             <div
-                                                                className={`size-3 rounded-full
-                            ${x === 'General'
-                                                                        ? 'bg-[#374151]'
-                                                                        : x === 'Work'
+                                                                className={`size-3 rounded-full ${x ===
+                                                                        'General'
+                                                                        ? 'bg-[#6B7280]'
+                                                                        : x ===
+                                                                            'Work'
                                                                             ? 'bg-[#6366F1]'
-                                                                            : x === 'Todo'
+                                                                            : x ===
+                                                                                'Todo'
                                                                                 ? 'bg-[#FACC15] text-black'
-                                                                                : x === 'Ideas'
+                                                                                : x ===
+                                                                                    'Ideas'
                                                                                     ? 'bg-[#F472B6]'
-                                                                                    : x === 'Learning'
+                                                                                    : x ===
+                                                                                        'Learning'
                                                                                         ? 'bg-[#10B981]'
-                                                                                        : x === 'Projects'
+                                                                                        : x ===
+                                                                                            'Projects'
                                                                                             ? 'bg-[#3B82F6]'
-                                                                                            : x === 'Debugging'
+                                                                                            : x ===
+                                                                                                'Debugging'
                                                                                                 ? 'bg-[#EF4444]'
-                                                                                                : x === 'Documentation'
+                                                                                                : x ===
+                                                                                                    'Documentation'
                                                                                                     ? 'bg-[#F97316]'
-                                                                                                    : x === 'Snippets'
+                                                                                                    : x ===
+                                                                                                        'Snippets'
                                                                                                         ? 'bg-[#8B5CF6]'
-                                                                                                        : x === 'Favorites'
+                                                                                                        : x ===
+                                                                                                            'Favorites'
                                                                                                             ? 'bg-[#EAB308] text-black'
-                                                                                                            : x === 'Reminders'
+                                                                                                            : x ===
+                                                                                                                'Reminders'
                                                                                                                 ? 'bg-[#06B6D4]'
                                                                                                                 : 'bg-[#303034]'
-                                                                    }
-                                                                    `}></div>
-                                                            <h2>{x}</h2>{' '}
+                                                                    }`}></div>
+                                                            <h2>{x}</h2>
                                                         </div>
                                                         <div
-                                                            className={`size-6 rounded flex items-center justify-center p-4
-                        ${x === 'General'
-                                                                    ? 'bg-[#374151] text-white'
-                                                                    : x === 'Work'
+                                                            className={`size-6 rounded flex items-center justify-center p-4 ${x === 'General'
+                                                                    ? 'bg-[#6B7280] text-white'
+                                                                    : x ===
+                                                                        'Work'
                                                                         ? 'bg-[#6366F1]'
-                                                                        : x === 'Todo'
+                                                                        : x ===
+                                                                            'Todo'
                                                                             ? 'bg-[#FACC15] text-black'
-                                                                            : x === 'Ideas'
+                                                                            : x ===
+                                                                                'Ideas'
                                                                                 ? 'bg-[#F472B6]'
-                                                                                : x === 'Learning'
+                                                                                : x ===
+                                                                                    'Learning'
                                                                                     ? 'bg-[#10B981]'
-                                                                                    : x === 'Projects'
+                                                                                    : x ===
+                                                                                        'Projects'
                                                                                         ? 'bg-[#3B82F6]'
-                                                                                        : x === 'Debugging'
+                                                                                        : x ===
+                                                                                            'Debugging'
                                                                                             ? 'bg-[#EF4444]'
-                                                                                            : x === 'Documentation'
+                                                                                            : x ===
+                                                                                                'Documentation'
                                                                                                 ? 'bg-[#F97316]'
-                                                                                                : x === 'Snippets'
+                                                                                                : x ===
+                                                                                                    'Snippets'
                                                                                                     ? 'bg-[#8B5CF6]'
-                                                                                                    : x === 'Favorites'
+                                                                                                    : x ===
+                                                                                                        'Favorites'
                                                                                                         ? 'bg-[#EAB308] text-black'
-                                                                                                        : x === 'Reminders'
+                                                                                                        : x ===
+                                                                                                            'Reminders'
                                                                                                             ? 'bg-[#06B6D4]'
                                                                                                             : 'bg-[#303034]'
-                                                                }
-                                                                    `}>
+                                                                }`}>
                                                             {count < 10
                                                                 ? `0${count}`
                                                                 : count}
@@ -260,20 +296,15 @@ const MainPage = () => {
                                         })}
                                     </div>
                                 </aside>
-                                {filteredTitle.length > 0 ? (
-                                        <div className="mx-4 my-8 grid grid-cols-4 gap-6 h-fit ">
-                                            {filteredTitle.map((note) => (
-                                                <div
-                                                    className=""
-                                                    key={note.id}
-                                                    onClick={() =>
-                                                        getNote(note.id)
-                                                    }>
-                                                    <Link>
-                                                        <div
-                                                            className={`px-5 py-2 w-full rounded-2xl group hover:scale-105 transition-all shadow ${note.category.toLowerCase() ===
+                                {filter.length > 0 ? (
+                                    <main className="mx-4 my-8 gap-6 w-full grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 h-fit max-md:grid-cols-2 max-sm:grid-cols-1">
+                                        {filter.map((note) => (
+                                            <div key={note.id}>
+                                                <Link to={`/edit/${note.id}`}>
+                                                    <div
+                                                        className={`px-5 py-2 w-full rounded-2xl group hover:scale-105 transition-all shadow ${note.category.toLowerCase() ===
                                                                 'general'
-                                                                ? 'bg-[#374151]'
+                                                                ? 'bg-[#6B7280]'
                                                                 : note.category.toLowerCase() ===
                                                                     'work'
                                                                     ? 'bg-[#6366F1]'
@@ -305,12 +336,11 @@ const MainPage = () => {
                                                                                                         'reminders'
                                                                                                         ? 'bg-[#06B6D4]'
                                                                                                         : 'bg-[#303034]'
-                                                                }`}
-                                                            to={`/edit/${note.id}`}>
-                                                            <div
-                                                                className={`${note.category.toLowerCase() ===
+                                                            }`}>
+                                                        <div
+                                                            className={`${note.category.toLowerCase() ===
                                                                     'general'
-                                                                    ? 'text-[#374151]'
+                                                                    ? 'text-[#6B7280]'
                                                                     : note.category.toLowerCase() ===
                                                                         'work'
                                                                         ? 'text-[#6366F1]'
@@ -342,69 +372,29 @@ const MainPage = () => {
                                                                                                             'reminders'
                                                                                                             ? 'text-[#06B6D4]'
                                                                                                             : 'text-[#303034]'
-                                                                    } flex items-center justify-between`}>
-                                                                <p
-                                                                    className={`w-fit px-3 py-1 rounded-lg bg-[#303030]`}>
-                                                                    {note.category.toUpperCase()}
-                                                                </p>
-                                                                <div className='flex gap-2'>
-                                                                    <Link className='bg-[#303030] hidden group-hover:block p-1 rounded-full'>
-                                                                        <MdModeEditOutline className='size-5    ' />
-                                                                    </Link>
-                                                                    <button className='bg-[#303030] hidden group-hover:block p-1 rounded-full'>
-                                                                        <MdDelete className='size-5' />
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            <h1 className="my-4 text-3xl break-words text-center group-hover:underline">
-                                                                {note.title}
-                                                            </h1>
-                                                            <div className=" flex items-center justify-between">
-                                                                <p>{note.time}</p>
-                                                                <p>{note.date}</p>
-                                                            </div>
+                                                                } flex items-center justify-between`}>
+                                                            <p
+                                                                className={`w-fit px-3 py-1 rounded-lg bg-[#303030]`}>
+                                                                {note.category.toUpperCase()}
+                                                            </p>
+                                                            <button onClick={() => deleteNote(note.id)} className="bg-[#303030] hidden group-hover:block p-1 rounded-full">
+                                                                <MdDelete className="size-5" />
+                                                            </button>
                                                         </div>
-                                                    </Link>
-                                                </div>
-                                            ))}
-                                        </div>
-                                ) : (
-                                    <CenterCard
-                                        className={'max-[500px]:w-[70%]'}>
-                                        <p className="text-lg font-semibold">
-                                            Your notebook is empty!
-                                        </p>
-                                        <p className="text-sm">
-                                            Start adding notes to stay
-                                            organized.
-                                        </p>
-                                        <Link
-                                            to="/new"
-                                            className="mt-3 text-center py-2 bg-[#3E37F7] text-white rounded-lg hover:bg-[#2922fc] ">
-                                            Create Your First Note
-                                        </Link>
-                                    </CenterCard>
-                                )}
+                                                        <h1 className="my-4 text-3xl break-words text-center group-hover:underline">
+                                                            {note.title}
+                                                        </h1>
+                                                        <div className="flex items-center justify-between">
+                                                            <p>{note.time}</p>
+                                                            <p>{note.date}</p>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        ))}
+                                    </main>
+                                ) : null}
                             </div>
-                            {/* Edit Section */}
-                            {/* <div
-                                        className={`mx-8 my-10 w-full max-[700px]:hidden ${
-                                            filteredTitle.length === 0 && searchItem
-                                                ? 'hidden'
-                                                : 'block'
-                                        }`}>
-                                        {selectedNote ? (
-                                            <EditNotes
-                                                note={selectedNote}
-                                                onDelete={handleDeleteNotes}
-                                            />
-                                        ) : (
-                                            <p className="dark:text-white text-center my-80">
-                                                Choose a note to view and edit its
-                                                details.
-                                            </p>
-                                        )}
-                                    </div> */}
                         </>
                     )}
                 </div>

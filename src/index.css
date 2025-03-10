@@ -196,6 +196,6 @@ button {
     height: auto !important;
   }
 
-.prose.edit select{
+.prose.notEdit select{
     pointer-events: none;
 }

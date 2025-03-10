@@ -65,7 +65,7 @@ const TipTapRender = ({ initialContent = '', editable = true, onContentChange, c
         <div className={`${className}`}>
             <EditorContent
                 editor={editor}
-                className="prose edit max-w-none dark:text-white"
+                className="prose max-w-none dark:text-white"
             />
         </div>
         </>
