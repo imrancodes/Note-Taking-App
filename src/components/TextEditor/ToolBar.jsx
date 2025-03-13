@@ -11,7 +11,7 @@ import { FaLinkSlash, FaRegImage } from 'react-icons/fa6';
 import PropTypes from 'prop-types';
 
 
-const TextEditor = ({ editor }) => {
+const ToolBar = ({ editor }) => {
 
 
   const handleImageUpload = (event) => {
@@ -213,8 +213,8 @@ const TextEditor = ({ editor }) => {
   );
 };
 
-TextEditor.propTypes = {
+ToolBar.propTypes = {
   editor: PropTypes.object,
 };
 
-export default TextEditor;
+export default ToolBar;
