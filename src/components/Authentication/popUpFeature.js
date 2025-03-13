@@ -46,8 +46,6 @@ export const AuthWithGoogle = async (e, navigate) => {
         displayName: auth.currentUser.providerData[0].displayName,
         photoURL: auth.currentUser.providerData[0].photoURL,
       });
-
-        console.log(auth.currentUser);
         toast.success('Successfully signed in!', { autoClose: 3000 });
         navigate('/');
     } catch (err) {
