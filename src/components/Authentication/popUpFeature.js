@@ -61,7 +61,6 @@ export const AuthWithGitHub = async (e, navigate) => {
             displayName: auth.currentUser.displayName,
             photoURL: auth.currentUser.photoURL,
         });
-        console.log(auth.currentUser);
 
         toast.success('Account created successfully!', { autoClose: 3000 });
 
