@@ -69,10 +69,6 @@ const EditNotes = () => {
         }
 
         setNoteEditable(!noteEditable);
-
-        noteEditable
-            ? document.querySelector('.prose').classList.add('notEdit')
-            : document.querySelector('.prose').classList.remove('notEdit');
     };
 
 

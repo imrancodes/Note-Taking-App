@@ -33,6 +33,7 @@ const TextEditor = ({ editor }) => {
       <div className="flex flex-wrap gap-5 p-2 dark:text-white rounded mt-3 text-2xl">
         {/* Bold */}
         <button
+        title='Bold'
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`p-2 rounded ${editor.isActive('bold') ? 'bg-[#3E35F0] text-white' : ''
             }`}>
@@ -41,6 +42,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Italic */}
         <button
+        title='Italic'
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`p-2 rounded ${editor.isActive('italic')
             ? 'bg-[#3E35F0] text-white'
@@ -51,6 +53,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Underline */}
         <button
+        title='Underline'
           onClick={() =>
             editor.chain().focus().toggleUnderline().run()
           }
@@ -63,6 +66,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Strikethrough */}
         <button
+        title='Strikethrough'
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={`p-2 rounded ${editor.isActive('strike')
             ? 'bg-[#3E35F0] text-white'
@@ -73,6 +77,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Headings (H1, H2, H3) */}
         <button
+        title='Headings 1'
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 1 }).run()
           }
@@ -84,6 +89,7 @@ const TextEditor = ({ editor }) => {
         </button>
 
         <button
+        title='Headings 2'
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
@@ -95,6 +101,7 @@ const TextEditor = ({ editor }) => {
         </button>
 
         <button
+        title='Headings 3'
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 3 }).run()
           }
@@ -107,6 +114,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Bullet List */}
         <button
+        title='Bullet List'
           onClick={() => editor.commands.toggleBulletList()}
           className={`p-2 rounded ${editor.isActive('bulletList')
             ? 'bg-[#3E35F0] text-white'
@@ -117,6 +125,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Numbered List */}
         <button
+        title='Numbered List'
           onClick={() => editor.commands.toggleOrderedList()}
           className={`p-2 rounded ${editor.isActive('orderedList')
             ? 'bg-[#3E35F0] text-white'
@@ -127,6 +136,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Blockquote */}
         <button
+        title='Blockquote'
           onClick={() =>
             editor.chain().focus().toggleBlockquote().run()
           }
@@ -139,6 +149,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Code Block */}
         <button
+        title='Code Block'
           onClick={() =>
             editor.chain().focus().toggleCodeBlock().run()
           }
@@ -149,6 +160,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Inline Code */}
         <button
+        title='Inline Code'
           onClick={() => editor.chain().focus().toggleCode().run()}
           className={`p-2 rounded ${editor.isActive('code') ? 'bg-[#3E35F0] text-white' : ''
             }`}>
@@ -157,6 +169,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Add Link */}
         <button
+        title='Url'
           onClick={() => {
             const url = prompt(
               'Enter URL (Make sure to start with https://):'
@@ -175,6 +188,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Remove Link */}
         <button
+          title='Remove Url'
           onClick={() => editor.chain().focus().unsetLink().run()}
           className="p-2 rounded">
           <FaLinkSlash />
@@ -182,6 +196,7 @@ const TextEditor = ({ editor }) => {
 
         {/* Add Image */}
         <input
+        title='Image'
           type="file"
           accept="image/*"
           onChange={handleImageUpload}

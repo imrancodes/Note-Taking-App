@@ -73,7 +73,9 @@ const Login = () => {
             />
             <CenterCard className='max-[600px]:w-[80%]'>
                 <div className='flex justify-center'>
-                    <img src={logo} alt="" className='size-24 ' />
+                    <Link to={'/'}>
+                        <img src={logo} alt="" className='size-24 ' />
+                    </Link>
                 </div>
                 <h1 className="text-[#3E37F7] text-3xl ">SignIn</h1>
                 <p className="text-[12px] dark:text-white">

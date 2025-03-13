@@ -3,23 +3,32 @@ import { FaPlus } from 'react-icons/fa';
 import Navbar from '../Navbar/Navbar';
 import { FaSearch } from 'react-icons/fa';
 import { useEffect, useId, useState } from 'react';
-import { deleteDoc, doc, getDoc, getFirestore } from 'firebase/firestore';
+import {
+    deleteDoc,
+    doc,
+    getDoc,
+    getFirestore,
+    query,
+    where,
+} from 'firebase/firestore';
 import { app } from '../../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import CenterCard from '../Authentication/CenterCard';
 import { MdDelete } from 'react-icons/md';
+import { getAuth } from 'firebase/auth';
+import TipTapRender from '../TextEditor/TipTapRender';
 
 const db = getFirestore(app);
+// const auth = getAuth(app)
 
-const MainPage = () => {
+const MainPage = ({ user }) => {
     const id = useId();
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchItem, setSearchItem] = useState('');
     const [filter, setFilter] = useState(notes);
     const [selectedOption, setSelectedOption] = useState('all');
-
-    const navigate = useNavigate()
+    const [editorData, setEditorData] = useState('');
 
     const category = [
         'General',
@@ -38,7 +47,11 @@ const MainPage = () => {
     const getNotes = async () => {
         setLoading(true);
         try {
-            const querySnapshot = await getDocs(collection(db, 'notes'));
+            const q = query(
+                collection(db, 'notes'),
+                where('userId', '==', user.uid)
+            );
+            const querySnapshot = await getDocs(q);
             const notesArray = querySnapshot.docs.map((doc) => doc.data());
             setNotes(notesArray);
         } catch (err) {
@@ -48,10 +61,6 @@ const MainPage = () => {
         }
     };
 
-    // const handleDeleteNotes = (deletedNoteId) => {
-    //     setNotes((prev) => prev.filter((x) => x.id !== deletedNoteId));
-    // };
-
     const deleteNote = async (noteId) => {
         const confirmDelete = confirm(
             'Are you sure you want to delete this note?'
@@ -60,7 +69,7 @@ const MainPage = () => {
 
         try {
             await deleteDoc(doc(db, 'notes', noteId));
-            navigate('/')
+            setNotes((prev) => prev.filter((x) => x.id !== noteId));
         } catch (error) {
             console.error('Error deleting note:', error);
         }
@@ -110,8 +119,8 @@ const MainPage = () => {
                 <FaPlus className="size-10" />
             </Link>
             {/* Search Functionality */}
-            <div className="dark:text-white flex items-center gap-x-3 gap-y-6 justify-between mx-8 my-6 max-[700px]:flex-col">
-                <div className="w-[70%] border dark:border-white border-black outline-0 rounded-lg focus:border focus:border-[#3E37F7] flex items-center pl-3 max-[700px]:w-full">
+            <div className="dark:text-white flex items-center gap-x-3 gap-y-6 justify-between mx-8 my-6 max-[700px]:flex-col ">
+                <div className="w-[70%] border dark:border-white border-black outline-0 rounded-lg focus:border flex items-center pl-3 max-[700px]:w-full">
                     <FaSearch />
                     <input
                         type="text"
@@ -172,7 +181,7 @@ const MainPage = () => {
                         <CenterCard
                             className={'max-[500px]:w-[70%] dark:text-white'}>
                             {searchItem ? (
-                                <p className="text-lg font-semibold">
+                                <p className="text-lg font-semibold ">
                                     No search results found for {searchItem}
                                 </p>
                             ) : selectedOption !== 'all' ? (
@@ -181,7 +190,7 @@ const MainPage = () => {
                                     category
                                 </p>
                             ) : (
-                                <>
+                                <div className='flex flex-col gap-2 max-[700px]:mt-[100px] max-[400px]:mt-[180px]'>
                                     <p className="text-lg font-semibold">
                                         Your notebook is empty!
                                     </p>
@@ -193,7 +202,7 @@ const MainPage = () => {
                                         className="mt-3 text-center py-2 bg-[#3E37F7] text-white rounded-lg hover:bg-[#2922fc]">
                                         Create Your First Note
                                     </Link>
-                                </>
+                                </div>
                             )}
                         </CenterCard>
                     ) : (
@@ -201,8 +210,8 @@ const MainPage = () => {
                             <div className="flex w-full grow">
                                 <aside
                                     className={`dark:text-white w-fit min-h-[80vh] border-gray-500 hidden md:block ${filter.length === 0
-                                            ? 'border-r-0'
-                                            : 'border-r'
+                                        ? 'border-r-0'
+                                        : 'border-r'
                                         }`}>
                                     <div className={`flex flex-col`}>
                                         {category.map((x, i) => {
@@ -214,45 +223,8 @@ const MainPage = () => {
                                                         <div className="flex items-center gap-4">
                                                             <div
                                                                 className={`size-3 rounded-full ${x ===
-                                                                        'General'
-                                                                        ? 'bg-[#6B7280]'
-                                                                        : x ===
-                                                                            'Work'
-                                                                            ? 'bg-[#6366F1]'
-                                                                            : x ===
-                                                                                'Todo'
-                                                                                ? 'bg-[#FACC15] text-black'
-                                                                                : x ===
-                                                                                    'Ideas'
-                                                                                    ? 'bg-[#F472B6]'
-                                                                                    : x ===
-                                                                                        'Learning'
-                                                                                        ? 'bg-[#10B981]'
-                                                                                        : x ===
-                                                                                            'Projects'
-                                                                                            ? 'bg-[#3B82F6]'
-                                                                                            : x ===
-                                                                                                'Debugging'
-                                                                                                ? 'bg-[#EF4444]'
-                                                                                                : x ===
-                                                                                                    'Documentation'
-                                                                                                    ? 'bg-[#F97316]'
-                                                                                                    : x ===
-                                                                                                        'Snippets'
-                                                                                                        ? 'bg-[#8B5CF6]'
-                                                                                                        : x ===
-                                                                                                            'Favorites'
-                                                                                                            ? 'bg-[#EAB308] text-black'
-                                                                                                            : x ===
-                                                                                                                'Reminders'
-                                                                                                                ? 'bg-[#06B6D4]'
-                                                                                                                : 'bg-[#303034]'
-                                                                    }`}></div>
-                                                            <h2>{x}</h2>
-                                                        </div>
-                                                        <div
-                                                            className={`size-6 rounded flex items-center justify-center p-4 ${x === 'General'
-                                                                    ? 'bg-[#6B7280] text-white'
+                                                                    'General'
+                                                                    ? 'bg-[#6B7280]'
                                                                     : x ===
                                                                         'Work'
                                                                         ? 'bg-[#6366F1]'
@@ -284,6 +256,43 @@ const MainPage = () => {
                                                                                                             'Reminders'
                                                                                                             ? 'bg-[#06B6D4]'
                                                                                                             : 'bg-[#303034]'
+                                                                    }`}></div>
+                                                            <h2>{x}</h2>
+                                                        </div>
+                                                        <div
+                                                            className={`size-6 rounded flex items-center justify-center p-4 ${x === 'General'
+                                                                ? 'bg-[#6B7280] text-white'
+                                                                : x ===
+                                                                    'Work'
+                                                                    ? 'bg-[#6366F1]'
+                                                                    : x ===
+                                                                        'Todo'
+                                                                        ? 'bg-[#FACC15] text-black'
+                                                                        : x ===
+                                                                            'Ideas'
+                                                                            ? 'bg-[#F472B6]'
+                                                                            : x ===
+                                                                                'Learning'
+                                                                                ? 'bg-[#10B981]'
+                                                                                : x ===
+                                                                                    'Projects'
+                                                                                    ? 'bg-[#3B82F6]'
+                                                                                    : x ===
+                                                                                        'Debugging'
+                                                                                        ? 'bg-[#EF4444]'
+                                                                                        : x ===
+                                                                                            'Documentation'
+                                                                                            ? 'bg-[#F97316]'
+                                                                                            : x ===
+                                                                                                'Snippets'
+                                                                                                ? 'bg-[#8B5CF6]'
+                                                                                                : x ===
+                                                                                                    'Favorites'
+                                                                                                    ? 'bg-[#EAB308] text-black'
+                                                                                                    : x ===
+                                                                                                        'Reminders'
+                                                                                                        ? 'bg-[#06B6D4]'
+                                                                                                        : 'bg-[#303034]'
                                                                 }`}>
                                                             {count < 10
                                                                 ? `0${count}`
@@ -296,105 +305,126 @@ const MainPage = () => {
                                         })}
                                     </div>
                                 </aside>
-                                {filter.length > 0 ? (
-                                    <main className="mx-4 my-8 gap-6 w-full grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 h-fit max-md:grid-cols-2 max-sm:grid-cols-1">
-                                        {filter.map((note) => (
-                                            <div key={note.id}>
-                                                <Link to={`/edit/${note.id}`}>
+
+                                {filter.length > 0
+                                    ? (
+
+                                            <main className="mx-4 my-8 gap-6 w-full grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 max-md:grid-cols-2 max-sm:grid-cols-1 auto-rows-min">
+                                                {filter.map((note) => (
                                                     <div
-                                                        className={`px-5 py-2 w-full rounded-2xl group hover:scale-105 transition-all shadow ${note.category.toLowerCase() ===
-                                                                'general'
-                                                                ? 'bg-[#6B7280]'
-                                                                : note.category.toLowerCase() ===
-                                                                    'work'
-                                                                    ? 'bg-[#6366F1]'
-                                                                    : note.category.toLowerCase() ===
-                                                                        'todo'
-                                                                        ? 'bg-[#FACC15] text-black'
-                                                                        : note.category.toLowerCase() ===
-                                                                            'ideas'
-                                                                            ? 'bg-[#F472B6]'
-                                                                            : note.category.toLowerCase() ===
-                                                                                'learning'
-                                                                                ? 'bg-[#10B981]'
-                                                                                : note.category.toLowerCase() ===
-                                                                                    'projects'
-                                                                                    ? 'bg-[#3B82F6]'
-                                                                                    : note.category.toLowerCase() ===
-                                                                                        'debugging'
-                                                                                        ? 'bg-[#EF4444]'
-                                                                                        : note.category.toLowerCase() ===
-                                                                                            'documentation'
-                                                                                            ? 'bg-[#F97316]'
-                                                                                            : note.category.toLowerCase() ===
-                                                                                                'snippets'
-                                                                                                ? 'bg-[#8B5CF6]'
-                                                                                                : note.category.toLowerCase() ===
-                                                                                                    'favorites'
-                                                                                                    ? 'bg-[#EAB308] text-black'
-                                                                                                    : note.category.toLowerCase() ===
-                                                                                                        'reminders'
-                                                                                                        ? 'bg-[#06B6D4]'
-                                                                                                        : 'bg-[#303034]'
-                                                            }`}>
-                                                        <div
-                                                            className={`${note.category.toLowerCase() ===
+                                                        key={note.id}
+                                                        className="h-full">
+                                                        <Link
+                                                            to={`/edit/${note.id}`}>
+                                                            <div
+                                                                className={`px-5 py-5 w-full rounded-2xl group hover:scale-105 h-auto transition-all shadow ${note.category.toLowerCase() ===
                                                                     'general'
-                                                                    ? 'text-[#6B7280]'
+                                                                    ? 'bg-[#6B7280]'
                                                                     : note.category.toLowerCase() ===
                                                                         'work'
-                                                                        ? 'text-[#6366F1]'
+                                                                        ? 'bg-[#6366F1]'
                                                                         : note.category.toLowerCase() ===
                                                                             'todo'
-                                                                            ? 'text-[#FACC15]'
+                                                                            ? 'bg-[#FACC15] text-black'
                                                                             : note.category.toLowerCase() ===
                                                                                 'ideas'
-                                                                                ? 'text-[#F472B6]'
+                                                                                ? 'bg-[#F472B6]'
                                                                                 : note.category.toLowerCase() ===
                                                                                     'learning'
-                                                                                    ? 'text-[#10B981]'
+                                                                                    ? 'bg-[#10B981]'
                                                                                     : note.category.toLowerCase() ===
                                                                                         'projects'
-                                                                                        ? 'text-[#3B82F6]'
+                                                                                        ? 'bg-[#3B82F6]'
                                                                                         : note.category.toLowerCase() ===
                                                                                             'debugging'
-                                                                                            ? 'text-[#EF4444]'
+                                                                                            ? 'bg-[#EF4444]'
                                                                                             : note.category.toLowerCase() ===
                                                                                                 'documentation'
-                                                                                                ? 'text-[#F97316]'
+                                                                                                ? 'bg-[#F97316]'
                                                                                                 : note.category.toLowerCase() ===
                                                                                                     'snippets'
-                                                                                                    ? 'text-[#8B5CF6]'
+                                                                                                    ? 'bg-[#8B5CF6]'
                                                                                                     : note.category.toLowerCase() ===
                                                                                                         'favorites'
-                                                                                                        ? 'text-[#EAB308]'
+                                                                                                        ? 'bg-[#EAB308] text-black'
                                                                                                         : note.category.toLowerCase() ===
                                                                                                             'reminders'
-                                                                                                            ? 'text-[#06B6D4]'
-                                                                                                            : 'text-[#303034]'
-                                                                } flex items-center justify-between`}>
-                                                            <p
-                                                                className={`w-fit px-3 py-1 rounded-lg bg-[#303030]`}>
-                                                                {note.category.toUpperCase()}
-                                                            </p>
-                                                            <button onClick={() => deleteNote(note.id)} className="bg-[#303030] hidden group-hover:block p-1 rounded-full">
-                                                                <MdDelete className="size-5" />
-                                                            </button>
-                                                        </div>
-                                                        <h1 className="my-4 text-3xl break-words text-center group-hover:underline">
-                                                            {note.title}
-                                                        </h1>
-                                                        <div className="flex items-center justify-between">
-                                                            <p>{note.time}</p>
-                                                            <p>{note.date}</p>
-                                                        </div>
+                                                                                                            ? 'bg-[#06B6D4]'
+                                                                                                            : 'bg-[#303034]'
+                                                                    }`}>
+                                                                <div
+                                                                    className={`${note.category.toLowerCase() ===
+                                                                        'general'
+                                                                        ? 'text-[#6B7280]'
+                                                                        : note.category.toLowerCase() ===
+                                                                            'work'
+                                                                            ? 'text-[#6366F1]'
+                                                                            : note.category.toLowerCase() ===
+                                                                                'todo'
+                                                                                ? 'text-[#FACC15]'
+                                                                                : note.category.toLowerCase() ===
+                                                                                    'ideas'
+                                                                                    ? 'text-[#F472B6]'
+                                                                                    : note.category.toLowerCase() ===
+                                                                                        'learning'
+                                                                                        ? 'text-[#10B981]'
+                                                                                        : note.category.toLowerCase() ===
+                                                                                            'projects'
+                                                                                            ? 'text-[#3B82F6]'
+                                                                                            : note.category.toLowerCase() ===
+                                                                                                'debugging'
+                                                                                                ? 'text-[#EF4444]'
+                                                                                                : note.category.toLowerCase() ===
+                                                                                                    'documentation'
+                                                                                                    ? 'text-[#F97316]'
+                                                                                                    : note.category.toLowerCase() ===
+                                                                                                        'snippets'
+                                                                                                        ? 'text-[#8B5CF6]'
+                                                                                                        : note.category.toLowerCase() ===
+                                                                                                            'favorites'
+                                                                                                            ? 'text-[#EAB308]'
+                                                                                                            : note.category.toLowerCase() ===
+                                                                                                                'reminders'
+                                                                                                                ? 'text-[#06B6D4]'
+                                                                                                                : 'text-[#303034]'
+                                                                        } flex items-center justify-between`}>
+                                                                    <p
+                                                                        className={`w-fit px-3 py-1 rounded-lg bg-[#303030] text-[14px]`}>
+                                                                        {note.category.toUpperCase()}
+                                                                    </p>
+                                                                    <button
+                                                                        onClick={(
+                                                                            e
+                                                                        ) => {
+                                                                            e.preventDefault();
+                                                                            e.stopPropagation();
+                                                                            deleteNote(
+                                                                                note.id
+                                                                            );
+                                                                        }}
+                                                                        className="bg-[#303030] hidden group-hover:block p-1 rounded-full">
+                                                                        <MdDelete className="size-5" />
+                                                                    </button>
+                                                                </div>
+                                                                <h1 className="my-10 text-4xl break-words text-center group-hover:underline font-bold">
+                                                                    {note.title}
+                                                                </h1>
+                                                                <div className="text-[15px] flex items-center justify-between">
+                                                                    <p>
+                                                                        {note.time}
+                                                                    </p>
+                                                                    <p>
+                                                                        {note.date}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </Link>
                                                     </div>
-                                                </Link>
-                                            </div>
-                                        ))}
-                                    </main>
-                                ) : null}
+                                                ))}
+                                            </main>
+                                    ) : null}
                             </div>
+
                         </>
                     )}
                 </div>

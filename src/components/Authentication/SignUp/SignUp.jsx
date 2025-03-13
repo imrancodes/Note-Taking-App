@@ -25,9 +25,9 @@ const SignUp = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
+
     const navigate = useNavigate()
-    
+
     const signUpUser = async (e) => {
         e.preventDefault();
         try {
@@ -59,7 +59,7 @@ const SignUp = () => {
             } else if (error.code === 'auth/weak-password') {
                 errorMessage = 'Weak password! Use at least 6 characters.';
             }
-            
+
             toast.error(
                 errorMessage,
                 { autoClose: 3000 },
@@ -77,7 +77,9 @@ const SignUp = () => {
 
             <CenterCard className='max-[600px]:w-[80%]'>
                 <div className='flex justify-center'>
-                    <img src={logo} alt="" className='size-24 ' />
+                    <Link to={'/'}>
+                        <img src={logo} alt="" className='size-24 ' />
+                    </Link>
                 </div>
                 <h1 className="text-[#3E37F7] text-3xl ">SignUp</h1>
                 <p className="text-[12px] dark:text-white">

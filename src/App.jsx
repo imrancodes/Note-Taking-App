@@ -24,7 +24,7 @@ function App() {
   }
 
   return (
-    <MainPage />
+    <MainPage user={user} />
   )
 }
 

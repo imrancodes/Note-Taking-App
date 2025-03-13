@@ -3,13 +3,14 @@ import Navbar from '../Navbar/Navbar';
 import { IoMdClose } from 'react-icons/io';
 import Input from '../CommonComponents/Input';
 import { useId, useState } from 'react';
-import TextEditor from '../TextEditor/TextEditor';
 import Button from '../CommonComponents/Button';
 import { addDoc, collection, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { app } from '../../firebase';
 import TipTapRender from '../TextEditor/TipTapRender';
+import { getAuth } from 'firebase/auth';
 
 const db = getFirestore(app)
+const auth = getAuth(app)
 
 const AddNewNote = () => {
     const [editorData, setEditorData] = useState('')
@@ -42,12 +43,14 @@ const AddNewNote = () => {
         }
 
         try {
+            const user = auth.currentUser
             const docRef = await addDoc(collection(db, 'notes'), {
                 title: title.trim(),
                 category,
                 notesData: editorData,
                 date: currentDate,
-                time: currentTime
+                time: currentTime,
+                userId: user.uid
             })
 
             await updateDoc(doc(db, 'notes', docRef.id), {
@@ -55,7 +58,6 @@ const AddNewNote = () => {
             })
 
             navigate('/')
-            console.log(docRef);
         } catch (err) {
             console.log(err);
         }
@@ -113,7 +115,7 @@ const AddNewNote = () => {
                         </form>
                     </div>
                     <div>
-                        <TipTapRender onContentChange={setEditorData} className='p-4 max-[500px]:px-2 dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow mb-4 mt-3'/>
+                        <TipTapRender onContentChange={setEditorData} className='p-4 max-[500px]:px-2 dark:bg-[#303034] bg-[#E5E7EB] rounded-lg shadow mb-4 mt-3 '/>
                     </div>
                 </div>
                 {/* Submit Button */}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Button from '../CommonComponents/Button';
 import { app } from '../../firebase';
 import LogoAndTheme from '../LogoAndTheme';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const auth = getAuth(app);
 
@@ -28,8 +28,8 @@ const Navbar = () => {
         if (confirmLogout) {
             signOut(auth)
             navigate('/')
-        }else{
-            return ;
+        } else {
+            return;
         }
 
     }
