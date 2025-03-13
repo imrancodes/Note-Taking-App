@@ -13,7 +13,7 @@ import css from 'highlight.js/lib/languages/css';
 import html from 'highlight.js/lib/languages/xml';
 import CodeBlockComponent from './CodeBlockComponent';
 import Placeholder from '@tiptap/extension-placeholder';
-import TextEditor from './TextEditor';
+import ToolBar from './ToolBar';
 
 const lowlight = createLowlight(all);
 
@@ -61,7 +61,7 @@ const TipTapRender = ({ initialContent = '', editable = true, onContentChange, c
 
     return (
         <>
-        {editable && <TextEditor editor={editor} />}
+        {editable && <ToolBar editor={editor} />}
         <div className={`${className}`}>
             <EditorContent
                 editor={editor}
